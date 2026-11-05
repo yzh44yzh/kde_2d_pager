@@ -50,6 +50,10 @@ TestCase {
     }
 
     function test_oneClickSelectsExactPair() {
+        mouseClick(cell(0, 1))
+        compare(backend.requested, ["work", "two"])
+        mouseClick(cell(1, 0))
+        compare(backend.requested, ["music", "one"])
         mouseClick(cell(1, 1))
         compare(backend.requested, ["music", "two"])
     }
@@ -57,13 +61,14 @@ TestCase {
     function test_keyboardMovesAndActivates() {
         cell(0, 0).forceActiveFocus()
         keyClick(Qt.Key_Right)
+        verify(cell(0, 1).activeFocus)
         keyClick(Qt.Key_Down)
         verify(cell(1, 1).activeFocus)
         keyClick(Qt.Key_Return)
         compare(backend.requested, ["music", "two"])
         keyClick(Qt.Key_Left)
         keyClick(Qt.Key_Space)
-        compare(backend.requested, ["work", "two"])
+        compare(backend.requested, ["music", "one"])
     }
 
     function test_pendingDoesNotMoveCurrentHighlight() {

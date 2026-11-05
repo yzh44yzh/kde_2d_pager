@@ -4,6 +4,10 @@ status: accepted
 
 # Two-dimensional activity and desktop pager
 
+The grid orientation and framing below are superseded by
+[ADR 0002](0002-activity-rows-and-opaque-frame.md). Switching behavior and scope
+remain in effect.
+
 Create a KDE Plasma panel widget with an always-visible grid of virtual desktop rows
 and activity columns. Each cell selects an exact activity and desktop pair with one
 click, providing direct access without opening a popup first.

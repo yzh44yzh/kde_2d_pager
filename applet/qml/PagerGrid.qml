@@ -4,24 +4,32 @@ import QtQuick.Controls as Controls
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 
-Item {
+Rectangle {
     id: root
     required property var backend
     readonly property int activityCount: backend.activities.length
     readonly property int desktopCount: backend.desktops.length
     readonly property real gap: Kirigami.Units.smallSpacing
-    readonly property real rowLabelWidth: Kirigami.Units.gridUnit * 1.5
-    readonly property real columnWidth: Kirigami.Units.gridUnit * 5
+    readonly property real framePadding: gap + border.width
+    readonly property real rowLabelWidth: Kirigami.Units.gridUnit * 5
+    readonly property real columnWidth: Kirigami.Units.gridUnit * 2
     readonly property real cellMinimumHeight: Kirigami.Units.gridUnit * 1.5
     readonly property real minimumWidth: activityCount > 0
-        ? rowLabelWidth + activityCount * (columnWidth + gap) : columnWidth * 2
-    readonly property real minimumHeight: (Math.max(1, desktopCount) + 1) * cellMinimumHeight
-        + Math.max(1, desktopCount) * gap
+        ? rowLabelWidth + desktopCount * (columnWidth + gap) + framePadding * 2
+        : rowLabelWidth * 2 + framePadding * 2
+    readonly property real minimumHeight: (Math.max(1, activityCount) + 1) * cellMinimumHeight
+        + Math.max(1, activityCount) * gap + framePadding * 2
     readonly property real rowHeight: Math.max(1,
-        (height - Math.max(1, desktopCount) * gap) / (Math.max(1, desktopCount) + 1))
+        (height - framePadding * 2 - Math.max(1, activityCount) * gap)
+            / (Math.max(1, activityCount) + 1))
     property int focusedCell: 0
     implicitWidth: minimumWidth
     implicitHeight: minimumHeight
+    color: Qt.rgba(Kirigami.Theme.backgroundColor.r, Kirigami.Theme.backgroundColor.g,
+                   Kirigami.Theme.backgroundColor.b, 1)
+    radius: Kirigami.Units.cornerRadius
+    border.width: 1
+    border.color: Kirigami.Theme.disabledTextColor
 
     function focusCell(index) {
         if (cells.count === 0)
@@ -33,36 +41,19 @@ Item {
     GridLayout {
         id: grid
         anchors.fill: parent
-        columns: root.activityCount + 1
+        anchors.margins: root.framePadding
+        columns: root.desktopCount + 1
         rowSpacing: root.gap
         columnSpacing: root.gap
         visible: root.activityCount > 0 && root.desktopCount > 0
 
         Controls.Label {
-            text: "#"
-            horizontalAlignment: Text.AlignHCenter
+            text: "Activity"
+            horizontalAlignment: Text.AlignLeft
             Layout.preferredWidth: root.rowLabelWidth
             Layout.preferredHeight: root.rowHeight
             verticalAlignment: Text.AlignVCenter
-            Accessible.name: "Virtual desktops"
-        }
-
-        Repeater {
-            model: root.backend.activities
-            delegate: Controls.Label {
-                required property var modelData
-                text: modelData.name
-                textFormat: Text.PlainText
-                elide: Text.ElideRight
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                Layout.fillWidth: true
-                Layout.preferredWidth: root.columnWidth
-                Layout.preferredHeight: root.rowHeight
-                Controls.ToolTip.visible: headerHover.hovered
-                Controls.ToolTip.text: modelData.name
-                HoverHandler { id: headerHover }
-            }
+            Accessible.name: "Activities and virtual desktops"
         }
 
         Repeater {
@@ -71,7 +62,31 @@ Item {
                 required property int index
                 required property var modelData
                 text: index + 1
+                textFormat: Text.PlainText
+                elide: Text.ElideRight
                 horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                Layout.fillWidth: true
+                Layout.row: 0
+                Layout.column: index + 1
+                Layout.preferredWidth: root.columnWidth
+                Layout.preferredHeight: root.rowHeight
+                Controls.ToolTip.visible: headerHover.hovered
+                Controls.ToolTip.text: modelData.name
+                Accessible.name: modelData.name
+                HoverHandler { id: headerHover }
+            }
+        }
+
+        Repeater {
+            model: root.backend.activities
+            delegate: Controls.Label {
+                required property int index
+                required property var modelData
+                text: modelData.name
+                textFormat: Text.PlainText
+                elide: Text.ElideRight
+                horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
                 Layout.row: index + 1
                 Layout.column: 0
@@ -90,8 +105,8 @@ Item {
             delegate: Controls.Button {
                 id: cell
                 required property int index
-                readonly property int activityIndex: index % Math.max(1, root.activityCount)
-                readonly property int desktopIndex: Math.floor(index / Math.max(1, root.activityCount))
+                readonly property int activityIndex: Math.floor(index / Math.max(1, root.desktopCount))
+                readonly property int desktopIndex: index % Math.max(1, root.desktopCount)
                 readonly property var activity: root.backend.activities[activityIndex] ?? {id: "", name: ""}
                 readonly property var desktop: root.backend.desktops[desktopIndex] ?? {id: "", name: ""}
                 readonly property bool current: root.backend.currentActivity === activity.id
@@ -100,9 +115,9 @@ Item {
                     && root.backend.pendingActivity === activity.id
                     && root.backend.pendingDesktop === desktop.id
 
-                objectName: "cell-" + desktopIndex + "-" + activityIndex
-                Layout.row: desktopIndex + 1
-                Layout.column: activityIndex + 1
+                objectName: "cell-" + activityIndex + "-" + desktopIndex
+                Layout.row: activityIndex + 1
+                Layout.column: desktopIndex + 1
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.preferredWidth: root.columnWidth
@@ -126,10 +141,10 @@ Item {
 
                 Keys.onPressed: event => {
                     let next = index
-                    if (event.key === Qt.Key_Left && activityIndex > 0) next--
-                    else if (event.key === Qt.Key_Right && activityIndex + 1 < root.activityCount) next++
-                    else if (event.key === Qt.Key_Up && desktopIndex > 0) next -= root.activityCount
-                    else if (event.key === Qt.Key_Down && desktopIndex + 1 < root.desktopCount) next += root.activityCount
+                    if (event.key === Qt.Key_Left && desktopIndex > 0) next--
+                    else if (event.key === Qt.Key_Right && desktopIndex + 1 < root.desktopCount) next++
+                    else if (event.key === Qt.Key_Up && activityIndex > 0) next -= root.desktopCount
+                    else if (event.key === Qt.Key_Down && activityIndex + 1 < root.activityCount) next += root.desktopCount
                     else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                         cell.clicked()
                         event.accepted = true
@@ -161,6 +176,7 @@ Item {
 
     Controls.Label {
         anchors.fill: parent
+        anchors.margins: root.framePadding
         visible: root.activityCount === 0 || root.desktopCount === 0
         text: root.backend.status || "Waiting for activity and desktop information…"
         textFormat: Text.PlainText

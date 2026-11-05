@@ -21,7 +21,7 @@ PlasmoidItem {
     Layout.fillHeight: true
 
     toolTipMainText: "2D Activity Pager"
-    toolTipSubText: kdeBackend.error || kdeBackend.status || "Choose an activity column and desktop row."
+    toolTipSubText: kdeBackend.error || kdeBackend.status || "Choose an activity row and desktop column."
 
     PagerBackend { id: kdeBackend }
 

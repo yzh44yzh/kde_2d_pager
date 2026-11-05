@@ -1,8 +1,9 @@
 # 2D Activity Pager
 
 A Plasma panel widget that switches to an exact activity and virtual desktop pair
-with one click. Activities are columns; desktops are rows. The current position is
+with one click. Activities are rows; desktops are columns. The current position is
 marked with a filled cell and dot, while a pending destination shows an ellipsis.
+An opaque theme-colored background and outer border frame the entire grid.
 
 The initial target is **Plasma 6.6.6 on Wayland**. Plasma 6.6's activities library
 no longer exposes stopped activities or start/stop operations; the widget follows
@@ -54,11 +55,11 @@ it onto your panel. If it is not listed after installation, log out and back in,
 then reopen the picker. When updating an already loaded version, log out and back
 in to load the rebuilt native plugin.
 
-Increase the panel height until every desktop row is easy to click. The requested
-minimum is about 1.5 grid units per row, plus an activity-header row and spacing.
-Four desktops usually need roughly 150–170 pixels, depending on font and scaling.
-Long activity names are elided; hover to see their full names. Hover a desktop row
-number or destination cell to see its full desktop name.
+Increase the panel height until every activity row is easy to click. The requested
+minimum is about 1.5 grid units per row, plus a desktop-header row, spacing, and frame
+padding. Three activities usually need roughly 130–150 pixels, depending on font
+and scaling. Long activity names are elided; hover to see their full names. Hover a
+desktop column number or destination cell to see its full desktop name.
 
 Tab focuses cells; arrow keys move through the grid. Space or Enter activates the
 focused destination. The latest selection wins while a switch is pending. Errors
