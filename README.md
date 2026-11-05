@@ -6,6 +6,11 @@ position is marked with a filled cell and dot, while a pending destination shows
 an ellipsis.
 An opaque theme-colored background and outer border frame the entire grid.
 
+![Activity and desktop switcher popup with its panel button](docs/screenshots/widget.png)
+
+The expanded grid and panel button, rendered with example activities. Appearance
+follows your KDE theme.
+
 The initial target is **Plasma 6.6.6 on Wayland**. Plasma 6.6's activities library
 no longer exposes stopped activities or start/stop operations; the widget follows
 its available activities model. See KDE's
