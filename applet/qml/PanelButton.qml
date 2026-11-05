@@ -8,7 +8,7 @@ PlasmaComponents.ToolButton {
     signal expansionRequested(bool open)
 
     text: "2D Activity Pager"
-    icon.name: "desktop-grid"
+    icon.source: Qt.resolvedUrl("icons/local-twodpager.svg")
     display: PlasmaComponents.AbstractButton.IconOnly
     checked: popupOpen
     Accessible.name: text

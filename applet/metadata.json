@@ -2,7 +2,7 @@
     "KPlugin": {
         "Name": "2D Activity Pager",
         "Description": "Choose an activity and virtual desktop from a popup grid",
-        "Icon": "desktop-grid",
+        "Icon": "local-twodpager",
         "Version": "0.1.0",
         "Category": "Windows and Tasks"
     },
