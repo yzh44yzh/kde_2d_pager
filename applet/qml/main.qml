@@ -3,29 +3,46 @@ import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami as Kirigami
 import plasma.applet.local.twodpager
 
 PlasmoidItem {
     id: root
-    readonly property PagerGrid pagerGrid: fullRepresentationItem as PagerGrid
-
-    preferredRepresentation: fullRepresentation
-    switchWidth: 0
-    switchHeight: 0
+    preferredRepresentation: compactRepresentation
+    hideOnWindowDeactivate: true
     Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
 
-    Layout.minimumWidth: pagerGrid ? pagerGrid.minimumWidth : 200
-    Layout.minimumHeight: pagerGrid ? pagerGrid.minimumHeight : 80
-    Layout.preferredWidth: Layout.minimumWidth
-    Layout.preferredHeight: Layout.minimumHeight
-    Layout.fillHeight: true
+    Layout.minimumWidth: Kirigami.Units.iconSizes.small
+    Layout.minimumHeight: Kirigami.Units.iconSizes.small
+    Layout.preferredWidth: Kirigami.Units.iconSizes.medium
+    Layout.preferredHeight: Kirigami.Units.iconSizes.medium
 
     toolTipMainText: "2D Activity Pager"
-    toolTipSubText: kdeBackend.error || kdeBackend.status || "Choose an activity row and desktop column."
+    toolTipTextFormat: Text.PlainText
+    toolTipSubText: kdeBackend.error || kdeBackend.status || currentDestination
+
+    readonly property string currentDestination:
+        nameFor(kdeBackend.activities, kdeBackend.currentActivity) + " · "
+        + nameFor(kdeBackend.desktops, kdeBackend.currentDesktop)
+
+    function nameFor(entries, id) {
+        for (let i = 0; i < entries.length; ++i) {
+            if (entries[i].id === id)
+                return entries[i].name
+        }
+        return "Unknown"
+    }
 
     PagerBackend { id: kdeBackend }
 
-    fullRepresentation: PagerGrid {
+    compactRepresentation: PanelButton {
+        popupOpen: root.expanded
+        onExpansionRequested: open => root.expanded = open
+    }
+
+    fullRepresentation: PagerPopup {
         backend: kdeBackend
+        popupOpen: root.expanded
+        onCloseRequested: root.expanded = false
     }
 }

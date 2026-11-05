@@ -4,6 +4,9 @@ status: accepted
 
 # Activity rows, desktop columns, and an opaque frame
 
+The panel sizing consequence below is superseded by
+[ADR 0003](0003-panel-button-and-popup-grid.md); orientation and styling remain in effect.
+
 Transpose the grid from [ADR 0001](0001-two-dimensional-activity-desktop-pager.md):
 activities are rows with names on the left, and virtual desktops are columns with
 numbers across the top. Arrow-key navigation follows these visible axes.

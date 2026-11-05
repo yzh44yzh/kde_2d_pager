@@ -1,5 +1,5 @@
 plasma_add_applet(local.twodpager
-    QML_SOURCES qml/main.qml qml/PagerGrid.qml
+    QML_SOURCES qml/main.qml qml/PagerGrid.qml qml/PagerPopup.qml qml/PanelButton.qml
     CPP_SOURCES pagerbackend.h
     GENERATE_APPLET_CLASS
 )

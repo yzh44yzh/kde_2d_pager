@@ -16,5 +16,8 @@ find_package(Qt6 REQUIRED COMPONENTS QuickTest)
 add_executable(qmltests qmltests.cpp)
 target_link_libraries(qmltests PRIVATE Qt6::QuickTest)
 target_compile_definitions(qmltests PRIVATE QUICK_TEST_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/qml")
-add_test(NAME grid COMMAND qmltests)
-set_tests_properties(grid PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_CONTROLS_STYLE=Basic")
+add_test(NAME grid COMMAND qmltests -input ${CMAKE_CURRENT_SOURCE_DIR}/qml/tst_grid.qml)
+add_test(NAME popup COMMAND qmltests -input ${CMAKE_CURRENT_SOURCE_DIR}/qml/tst_popup.qml)
+set_tests_properties(grid popup PROPERTIES
+    ENVIRONMENT "QT_QPA_PLATFORM=offscreen;QT_QUICK_CONTROLS_STYLE=Basic"
+    TIMEOUT 20)

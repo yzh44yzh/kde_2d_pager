@@ -131,6 +131,8 @@ void SwitchController::finish(const QString &error)
     Q_EMIT errorChanged();
     if (!error.isEmpty()) {
         m_errorTimer.start();
+    } else {
+        Q_EMIT switchSucceeded();
     }
 }
 

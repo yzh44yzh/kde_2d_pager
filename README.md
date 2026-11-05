@@ -1,8 +1,9 @@
 # 2D Activity Pager
 
-A Plasma panel widget that switches to an exact activity and virtual desktop pair
-with one click. Activities are rows; desktops are columns. The current position is
-marked with a filled cell and dot, while a pending destination shows an ellipsis.
+A Plasma panel button that opens a popup grid for switching to an exact activity
+and virtual desktop pair. Activities are rows; desktops are columns. The current
+position is marked with a filled cell and dot, while a pending destination shows
+an ellipsis.
 An opaque theme-colored background and outer border frame the entire grid.
 
 The initial target is **Plasma 6.6.6 on Wayland**. Plasma 6.6's activities library
@@ -41,7 +42,8 @@ QT_PLUGIN_PATH="$PWD/build/bin${QT_PLUGIN_PATH:+:$QT_PLUGIN_PATH}" \
   plasmoidviewer -a local.twodpager -f horizontal -l bottomedge -s 480x240
 ```
 
-The preview uses your real activities and desktops. Clicking its cells switches
+The preview uses your real activities and desktops. Open the grid with its panel
+button. Clicking a cell switches
 your workspace just like the installed widget.
 
 ## Install in the panel
@@ -55,15 +57,17 @@ it onto your panel. If it is not listed after installation, log out and back in,
 then reopen the picker. When updating an already loaded version, log out and back
 in to load the rebuilt native plugin.
 
-Increase the panel height until every activity row is easy to click. The requested
-minimum is about 1.5 grid units per row, plus a desktop-header row, spacing, and frame
-padding. Three activities usually need roughly 130–150 pixels, depending on font
-and scaling. Long activity names are elided; hover to see their full names. Hover a
-desktop column number or destination cell to see its full desktop name.
+The panel contains a compact grid-icon button; its tooltip shows the current
+activity and desktop. Click it to open the popup, which sizes itself to the grid.
+Long activity names are elided; hover to see their full names. Hover a desktop
+column number or destination cell to see its full desktop name.
 
-Tab focuses cells; arrow keys move through the grid. Space or Enter activates the
-focused destination. The latest selection wins while a switch is pending. Errors
-appear briefly in a passive message; the actual current cell remains highlighted.
+Opening the popup focuses the current cell. Arrow keys move through the grid;
+Space or Enter activates the focused destination. The latest selection wins while
+a switch is pending. The popup closes on success and stays open on failure for
+retrying. Errors appear briefly in a passive message; the actual current cell
+remains highlighted. Escape, clicking outside, or clicking the panel button again
+closes the popup. Closing it leaves an in-progress switch running.
 
 This is a compiled Plasma 6.6 applet with embedded QML. Installing it with
 `kpackagetool6` alone is insufficient. CMake installs the native plugin into Qt's

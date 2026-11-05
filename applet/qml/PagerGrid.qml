@@ -38,6 +38,16 @@ Rectangle {
         cells.itemAt(focusedCell).forceActiveFocus(Qt.TabFocusReason)
     }
 
+    function focusCurrentCell() {
+        let activity = -1
+        let desktop = -1
+        for (let i = 0; i < activityCount; ++i)
+            if (backend.activities[i].id === backend.currentActivity) activity = i
+        for (let i = 0; i < desktopCount; ++i)
+            if (backend.desktops[i].id === backend.currentDesktop) desktop = i
+        focusCell(activity >= 0 && desktop >= 0 ? activity * desktopCount + desktop : 0)
+    }
+
     GridLayout {
         id: grid
         anchors.fill: parent

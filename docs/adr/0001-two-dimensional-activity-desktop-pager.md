@@ -6,7 +6,8 @@ status: accepted
 
 The grid orientation and framing below are superseded by
 [ADR 0002](0002-activity-rows-and-opaque-frame.md). Switching behavior and scope
-remain in effect.
+remain in effect. [ADR 0003](0003-panel-button-and-popup-grid.md) replaces the
+always-visible grid with a panel button and popup.
 
 Create a KDE Plasma panel widget with an always-visible grid of virtual desktop rows
 and activity columns. Each cell selects an exact activity and desktop pair with one

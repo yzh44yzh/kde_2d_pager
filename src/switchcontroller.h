@@ -37,6 +37,7 @@ Q_SIGNALS:
     void stateChanged();
     void pendingChanged();
     void errorChanged();
+    void switchSucceeded();
 
 protected:
     Workspace *workspace() const { return m_workspace; }

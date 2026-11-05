@@ -71,6 +71,7 @@ private Q_SLOTS:
     {
         FakeWorkspace workspace;
         SwitchController controller(&workspace);
+        QSignalSpy succeeded(&controller, &SwitchController::switchSucceeded);
         controller.switchTo("music", "two");
         QCOMPARE(workspace.commands.size(), 1);
         QCOMPARE(workspace.commands[0].kind, "activity");
@@ -81,7 +82,9 @@ private Q_SLOTS:
         QCOMPARE(workspace.commands[1].kind, "desktop");
         workspace.complete(1);
         QVERIFY(controller.pending());
+        QCOMPARE(succeeded.size(), 0);
         QTRY_VERIFY(!controller.pending());
+        QCOMPARE(succeeded.size(), 1);
         QCOMPARE(controller.currentActivity(), "music");
         QCOMPARE(controller.currentDesktop(), "two");
         QVERIFY(controller.error().isEmpty());
@@ -154,11 +157,13 @@ private Q_SLOTS:
     {
         FakeWorkspace workspace;
         SwitchController controller(&workspace);
+        QSignalSpy succeeded(&controller, &SwitchController::switchSucceeded);
         controller.switchTo("music", "two");
         workspace.complete(0);
         workspace.complete(1, false);
         QVERIFY(!controller.pending());
         QCOMPARE(controller.error(), "Rejected");
+        QCOMPARE(succeeded.size(), 0);
         QCOMPARE(controller.currentActivity(), "music");
         QCOMPARE(controller.currentDesktop(), "one");
         QCOMPARE(workspace.commands.size(), 2);
