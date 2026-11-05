@@ -1,0 +1,11 @@
+{
+    "KPlugin": {
+        "Name": "2D Activity Pager",
+        "Description": "Switch to an activity and virtual desktop with one click",
+        "Icon": "desktop-grid",
+        "Version": "0.1.0",
+        "Category": "Windows and Tasks"
+    },
+    "X-Plasma-API-Minimum-Version": "6.6",
+    "KPackageStructure": "Plasma/Applet"
+}
